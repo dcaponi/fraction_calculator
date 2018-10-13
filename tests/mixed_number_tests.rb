@@ -1,8 +1,11 @@
 $LOAD_PATH << '.'
 require 'fraction.rb'
 require 'mixed_number.rb'
+require 'operation_runner.rb'
 
 class MixedNumberTests
+  include OperationRunner
+  
   def initialize
     @from_params = MixedNumber.new("3_2/7")
     @test_fraction = Fraction.new(3, 5)
@@ -12,15 +15,6 @@ class MixedNumberTests
         f.numerator = 9
         f.denominator = 13
       end
-    end
-  end
-
-  def run_operation(a, b, op, expected)
-    result = a.send(op.to_sym, b)
-    if(result.to_string == expected)
-      puts "#{a.to_string} #{op} #{b.respond_to?(:to_string) ? b.to_string : b} = #{result.to_string}".green
-    else
-      puts "#{a.to_string} #{op} #{b.respond_to?(:to_string) ? b.to_string : b} != #{expected}".red
     end
   end
 
