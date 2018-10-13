@@ -1,109 +1,87 @@
-
 class Fraction
-  attr_accessor :whole
   attr_accessor :numerator
   attr_accessor :denominator
 
-  def initialize(str_input = nil)
-    if str_input
-      if !str_input.include?('/') # Whole number only
-        @whole = str_input.to_i
-        @numerator = 0
-        @denominator = 1
-      else
-        parts = str_input.split('_')
-        @whole = parts.length > 1 ? parts.first.to_i : 0
-        fractional_parts = parts.last.split('/')
-        @numerator = fractional_parts.first.to_i
-        @denominator = fractional_parts.last.to_i
-      end
+  def initialize(numerator = nil, denominator = nil)
+    if !numerator.nil? && !denominator.nil?
+      @numerator = numerator.to_i
+      @denominator = denominator.to_i
     end
     yield self if block_given?
     raise "Divide by zero exception" if @denominator.zero?
   end
 
   def +(fraction)
-    to_improper_fraction!
-    fraction.to_improper_fraction!
-    result = Fraction.new do |f|
-      f.whole = 0
-      f.numerator = (@numerator * fraction.denominator) + (@denominator * fraction.numerator)
-      f.denominator = @denominator * fraction.denominator
+    if fraction.is_a?(Numeric)
+      numerator = @numerator + (@denominator * fraction)
+      denominator = @denominator
+    else
+      numerator = (@numerator * fraction.denominator) + (@denominator * fraction.numerator)
+      denominator = @denominator * fraction.denominator
     end
+    Fraction.new(numerator, denominator)
   end
 
   def -(fraction)
-    to_improper_fraction!
-    fraction.to_improper_fraction!
-    result = Fraction.new do |f|
-      f.whole = 0
-      f.numerator = (@numerator * fraction.denominator) - (@denominator * fraction.numerator)
-      f.denominator = @denominator * fraction.denominator
+    if fraction.is_a?(Numeric)
+      numerator = @numerator - (@denominator * fraction)
+      denominator = @denominator
+    else
+      numerator = (@numerator * fraction.denominator) - (@denominator * fraction.numerator)
+      denominator = @denominator * fraction.denominator
     end
+    Fraction.new(numerator, denominator)
   end
 
   def *(fraction)
-    to_improper_fraction!
-    fraction.to_improper_fraction!
-    result = Fraction.new do |f|
-      f.whole = 0
-      f.numerator = @numerator * fraction.numerator
-      f.denominator = @denominator * fraction.denominator
+    if fraction.is_a?(Numeric)
+      numerator = @numerator * fraction
+      denominator = @denominator
+    else
+      numerator = @numerator * fraction.numerator
+      denominator = @denominator * fraction.denominator
     end
+    Fraction.new(numerator, denominator)
   end
 
   def /(fraction)
-    to_improper_fraction!
-    fraction.to_improper_fraction!
-    result = Fraction.new do |f|
-      f.whole = 0
-      f.numerator = @numerator * fraction.denominator
-      f.denominator = @denominator * fraction.numerator
+    if fraction.is_a?(Numeric)
+      numerator = @numerator
+      denominator = @denominator * fraction
+    else
+      numerator = @numerator * fraction.denominator
+      denominator = @denominator * fraction.numerator
     end
+    Fraction.new(numerator, denominator)
   end
 
-  def print
-    if !@whole.zero?
-      if !@numerator.zero?
-        "#{@whole}_#{@numerator}/#{@denominator}"
-      else
-        "#{@whole}"
-      end
+  def to_string
+    if @numerator.zero?
+      "#{@numerator}"
+    elsif @numerator == @denominator
+      "1"
     else
       "#{@numerator}/#{@denominator}"
     end
   end
 
   def to_mixed_number
-    result = Fraction.new do |f|
+    reduce!
+    result = MixedNumber.new do |f|
       f.whole = @numerator / @denominator
-      f.numerator = @numerator % @denominator
-      f.denominator = @denominator
+      f.fractional_part = Fraction.new(@numerator % @denominator, @denominator)
     end
   end
 
-  def to_improper_fraction
-    result = Fraction.new do |f|
-      f.whole = 0
-      f.numerator = @denominator * @whole + @numerator
-      f.denominator = @denominator
-    end
+  def reduce!
+    gcd = greatest_common_denominator(@numerator, @denominator)
+    @numerator = @numerator / gcd
+    @denominator = @denominator / gcd
   end
 
-  def to_mixed_number!
-    fraction = self.to_mixed_number
-    @whole = fraction.whole
-    @numerator = fraction.numerator
-    @denominator = fraction.denominator
-    self
-  end
-
-  def to_improper_fraction!
-    fraction = self.to_improper_fraction
-    @whole = fraction.whole
-    @numerator = fraction.numerator
-    @denominator = fraction.denominator
-    self
+  private def greatest_common_denominator(a, b)
+    return a if b.zero?
+    greatest_common_denominator(b, a%b)
   end
 
 end

@@ -1,5 +1,6 @@
 $LOAD_PATH << '.'
 require 'fraction.rb'
+require 'mixed_number.rb'
 
 VALID_OPERATORS = ['+', '-', '*', '/']
 EXIT_COMMANDS = ["exit", "quit"]
@@ -31,24 +32,16 @@ def main
     break if quit
 
     begin
-      fraction_a = Fraction.new(expression.first)
-      fraction_b = Fraction.new(expression.last)
+      mixed_number_a = MixedNumber.new(expression.first)
+      mixed_number_b = MixedNumber.new(expression.last)
       # Meta: Convert the operator to symbol and call it like a method
-      result = fraction_a.send(expression[1].to_sym, fraction_b)
-      print_results(result)
+      result = mixed_number_a.send(expression[1].to_sym, mixed_number_b)
+      puts "result = #{result.to_string}"
     rescue
       puts "one of your operands is trying to divide by zero"
     end
 
   end
-end
-
-def print_results(result)
-  mixed_number_result = result.to_mixed_number
-  improper_fraction_result = result.to_improper_fraction
-
-  puts "As Mixed Number #{mixed_number_result.print}"
-  puts "As Improper Fraction #{improper_fraction_result.print}"
 end
 
 def print_instructions
