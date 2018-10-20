@@ -5,7 +5,7 @@ require 'operation_runner.rb'
 
 class MixedNumberTests
   include OperationRunner
-  
+
   def initialize
     @from_params = MixedNumber.new("3_2/7")
     @test_fraction = Fraction.new(3, 5)

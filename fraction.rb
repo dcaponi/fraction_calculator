@@ -11,46 +11,46 @@ class Fraction
     raise "Divide by zero exception" if @denominator.zero?
   end
 
-  def +(fraction)
-    if fraction.is_a?(Numeric)
-      numerator = @numerator + (@denominator * fraction)
+  def +(other)
+    if other.is_a?(Numeric)
+      numerator = @numerator + (@denominator * other)
       denominator = @denominator
     else
-      numerator = (@numerator * fraction.denominator) + (@denominator * fraction.numerator)
-      denominator = @denominator * fraction.denominator
+      numerator = (@numerator * other.denominator) + (@denominator * other.numerator)
+      denominator = @denominator * other.denominator
     end
     Fraction.new(numerator, denominator)
   end
 
-  def -(fraction)
-    if fraction.is_a?(Numeric)
-      numerator = @numerator - (@denominator * fraction)
+  def -(other)
+    if other.is_a?(Numeric)
+      numerator = @numerator - (@denominator * other)
       denominator = @denominator
     else
-      numerator = (@numerator * fraction.denominator) - (@denominator * fraction.numerator)
-      denominator = @denominator * fraction.denominator
+      numerator = (@numerator * other.denominator) - (@denominator * other.numerator)
+      denominator = @denominator * other.denominator
     end
     Fraction.new(numerator, denominator)
   end
 
-  def *(fraction)
-    if fraction.is_a?(Numeric)
-      numerator = @numerator * fraction
+  def *(other)
+    if other.is_a?(Numeric)
+      numerator = @numerator * other
       denominator = @denominator
     else
-      numerator = @numerator * fraction.numerator
-      denominator = @denominator * fraction.denominator
+      numerator = @numerator * other.numerator
+      denominator = @denominator * other.denominator
     end
     Fraction.new(numerator, denominator)
   end
 
-  def /(fraction)
-    if fraction.is_a?(Numeric)
+  def /(other)
+    if other.is_a?(Numeric)
       numerator = @numerator
-      denominator = @denominator * fraction
+      denominator = @denominator * other
     else
-      numerator = @numerator * fraction.denominator
-      denominator = @denominator * fraction.numerator
+      numerator = @numerator * other.denominator
+      denominator = @denominator * other.numerator
     end
     Fraction.new(numerator, denominator)
   end
